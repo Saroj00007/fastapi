@@ -31,12 +31,7 @@ class EnterpriseSigninRequest(BaseModel):
     contact_email: str = Field(min_length=1)
     phone: str = Field(min_length=1)
     business_description: str = Field(min_length=20)
-
-    selected_plan: str = Field(min_length=1)
-    billing_interval: str = Field(min_length=1)
-    subscription_amount: float
-    currency: str = Field(min_length=1)
-    payment_status: str = Field(min_length=1)
+    terms_accepted: bool
 
 
 class EnterpriseLoginRequest(BaseModel):
@@ -54,35 +49,13 @@ def health_check():
 @app.post("/signin", status_code=status.HTTP_201_CREATED)
 def enterprise_signup(payload: EnterpriseSigninRequest):
     
-    print({
-        "status": "demo_created",
-        "message": "Enterprise onboarding request received successfully.",
-        "request_id": f"demo-{uuid4()}",
-        "workspace_url": f"{payload.workspace_slug}.airabook.com",
-        "subscription": {
-            "plan": payload.selected_plan,
-            "amount": payload.subscription_amount,
-            "currency": payload.currency,
-            "interval": payload.billing_interval,
-            "status": payload.payment_status,
-        },
-        "created_at": datetime.now(timezone.utc).isoformat(),
-    })
-    
-    return {
-        "status": "demo_created",
-        "message": "Enterprise onboarding request received successfully.",
-        "request_id": f"demo-{uuid4()}",
-        "workspace_url": f"{payload.workspace_slug}.airabook.com",
-        "subscription": {
-            "plan": payload.selected_plan,
-            "amount": payload.subscription_amount,
-            "currency": payload.currency,
-            "interval": payload.billing_interval,
-            "status": payload.payment_status,
-        },
-        "created_at": datetime.now(timezone.utc).isoformat(),
-    }
+    return  {
+    "status": "pending_approval",
+    "message": "Enterprise onboarding request submitted for System Admin approval.",
+    "request_id": f"demo-{uuid4()}",
+    "workspace_url": f"{payload.workspace_slug}.airabook.com",
+    "created_at": datetime.now(timezone.utc).isoformat(),
+}
 
 
 @app.post("/login", status_code=status.HTTP_201_CREATED)
